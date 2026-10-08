@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+; Removes the ms-gamingoverlay do-nothing handler added by fix-gamebar-popup.reg.
+
+[-HKEY_CURRENT_USER\Software\Classes\ms-gamingoverlay]

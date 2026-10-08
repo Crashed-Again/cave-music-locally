@@ -1,0 +1,37 @@
+name: Build Cave for Windows (exe + MSI installer)
+
+on:
+  workflow_dispatch:      # lets you press "Run workflow" by hand
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build Cave.exe
+        run: >
+          dotnet publish Cave.csproj -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none
+          -o dist/Cave
+
+      - name: Install WiX
+        run: dotnet tool install --global wix --version 5.0.2
+
+      - name: Build MSI installer
+        run: >
+          & "$env:USERPROFILE\.dotnet\tools\wix.exe" build installer/Package.wxs -arch x64
+          -d "PublishDir=${{ github.workspace }}\dist\Cave"
+          -d "ProjectDir=${{ github.workspace }}"
+          -o dist/Cave-1.0.0.msi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Cave-installer
+          path: dist/Cave-1.0.0.msi

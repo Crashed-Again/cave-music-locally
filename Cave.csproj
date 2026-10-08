@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Cave</AssemblyName>
+    <RootNamespace>Cave</RootNamespace>
+    <Version>1.0.0</Version>
+    <Company>NeonBear</Company>
+    <Product>Cave</Product>
+    <ApplicationIcon>Assets\cave.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\cave.ico" />
+    <Resource Include="Assets\cave.png" />
+    <Resource Include="Assets\neonbear.png" />
+  </ItemGroup>
+
+</Project>

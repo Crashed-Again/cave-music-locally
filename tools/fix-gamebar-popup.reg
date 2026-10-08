@@ -1,0 +1,24 @@
+Windows Registry Editor Version 5.00
+
+; Stops the "You'll need a new app to open this ms-gamingoverlay link" popup
+; on PCs where Xbox Game Bar has been removed. Applies to the current user only.
+; Double-click to apply. Sign out and back in afterwards.
+
+[HKEY_CURRENT_USER\System\GameConfigStore]
+"GameDVR_Enabled"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR]
+"AppCaptureEnabled"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\GameBar]
+"UseNexusForGameBarEnabled"=dword:00000000
+"ShowStartupPanel"=dword:00000000
+"AutoGameModeEnabled"=dword:00000000
+
+; Make the ms-gamingoverlay link do nothing instead of showing the popup
+[HKEY_CURRENT_USER\Software\Classes\ms-gamingoverlay]
+@="URL:ms-gamingoverlay"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\Software\Classes\ms-gamingoverlay\shell\open\command]
+@="\"%SystemRoot%\\System32\\rundll32.exe\""

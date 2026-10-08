@@ -1,0 +1,40 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="Cave"
+           Manufacturer="NeonBear"
+           Version="1.0.0.0"
+           UpgradeCode="3F2B6C1E-7A4D-4E8B-9C21-5D0E8A7B1F43"
+           Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Cave is already installed." AllowSameVersionUpgrades="yes" />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="CaveIcon.ico" SourceFile="$(var.ProjectDir)\Assets\cave.ico" />
+    <Property Id="ARPPRODUCTICON" Value="CaveIcon.ico" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Cave">
+        <Component Id="CaveMain" Guid="*">
+          <File Id="CaveExe" Source="$(var.PublishDir)\Cave.exe" KeyPath="yes">
+            <Shortcut Id="StartMenuShortcut"
+                      Directory="ProgramMenuFolder"
+                      Name="Cave"
+                      Description="Clone playlists to MP3"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Icon="CaveIcon.ico" />
+            <Shortcut Id="DesktopShortcut"
+                      Directory="DesktopFolder"
+                      Name="Cave"
+                      Description="Clone playlists to MP3"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Icon="CaveIcon.ico" />
+          </File>
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="Cave" Level="1">
+      <ComponentRef Id="CaveMain" />
+    </Feature>
+
+  </Package>
+</Wix>

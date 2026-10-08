@@ -1,0 +1,284 @@
+<Window x:Class="Cave.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cave by NeonBear" Icon="Assets/cave.ico" Width="1100" Height="780" MinWidth="900" MinHeight="620"
+        Background="{StaticResource PageBg}" WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI" TextOptions.TextFormattingMode="Display">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="232"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <Grid Background="{StaticResource SideBg}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="16,20,16,24">
+                <Image Source="Assets/cave.png" Width="56" Height="56" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="Cave" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="by NeonBear" FontSize="12" Foreground="{StaticResource TextDim}"/>
+                    <TextBlock Text="v1.0.0" FontSize="12" Foreground="{StaticResource TextDim}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <RadioButton x:Name="NavClone" Content="Clone" Tag="Clone" GroupName="Nav" IsChecked="True"
+                             Style="{StaticResource NavButton}" Checked="Nav_Checked"/>
+                <RadioButton x:Name="NavOptions" Content="Options" Tag="Options" GroupName="Nav"
+                             Style="{StaticResource NavButton}" Checked="Nav_Checked"/>
+                <RadioButton x:Name="NavLog" Content="Log" Tag="Log" GroupName="Nav"
+                             Style="{StaticResource NavButton}" Checked="Nav_Checked"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Margin="18,0,0,18">
+                <Image Source="Assets/neonbear.png" Width="170" HorizontalAlignment="Left" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock Text="Copyright (c) 2026 - NeonBear" FontSize="11" Foreground="{StaticResource TextDim}" Margin="0,2,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- CONTENT -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- CLONE PAGE -->
+            <Grid x:Name="PageClone" Tag="Clone" Margin="30,22,30,12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Margin="4,0,0,18">
+                    <TextBlock Text="Clone" FontSize="30" FontWeight="SemiBold" Foreground="{StaticResource TextMain}"/>
+                    <TextBlock Text="Paste a YouTube Music, Spotify or Apple Music playlist and turn it into MP3s."
+                               Foreground="{StaticResource TextDim}" FontSize="13" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="Playlist link" Style="{StaticResource CardTitle}"/>
+                            <TextBlock x:Name="SourceText" Text="" HorizontalAlignment="Right"
+                                       Foreground="{StaticResource Accent}" FontSize="12" FontWeight="SemiBold"/>
+                        </Grid>
+                        <TextBlock Text="Public playlists only. Links from music.youtube.com, youtube.com, open.spotify.com and music.apple.com."
+                                   Style="{StaticResource CardDesc}"/>
+                        <TextBox x:Name="UrlBox" Style="{StaticResource Input}" Margin="0,12,0,0"
+                                 TextChanged="UrlBox_TextChanged"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Style="{StaticResource Card}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Output folder" Style="{StaticResource CardTitle}"/>
+                            <TextBlock x:Name="OutputText" Text="" Style="{StaticResource CardDesc}"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Choose..." Style="{StaticResource Btn}" Click="Choose_Click"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="3" Style="{StaticResource Card}">
+                    <Grid>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Put tracks in a playlist subfolder" Style="{StaticResource CardTitle}"/>
+                            <TextBlock Text="Creates a folder named after the playlist inside the output folder." Style="{StaticResource CardDesc}"/>
+                        </StackPanel>
+                        <ToggleButton x:Name="ToggleSubfolder" Style="{StaticResource Toggle}" IsChecked="True"/>
+                    </Grid>
+                </Border>
+
+                
+                <Border Grid.Row="4" x:Name="RecentCard" Style="{StaticResource Card}" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Recent playlists" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="Sync checks the playlist again and only downloads songs that were added since last time." Style="{StaticResource CardDesc}"/>
+                        <ItemsControl x:Name="RecentList" Margin="0,8,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" Foreground="#E6E6E6" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource TextDim}" FontSize="11"/>
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="Check" Tag="{Binding}" Style="{StaticResource Btn}"
+                                                Padding="14,6" Margin="10,0,6,0" Click="RecentCheck_Click"/>
+                                        <Button Grid.Column="2" Content="Use" Tag="{Binding}" Style="{StaticResource Btn}"
+                                                Padding="14,6" Margin="0,0,6,0" Click="RecentUse_Click"/>
+                                        <Button Grid.Column="3" Content="Sync" Tag="{Binding}" Style="{StaticResource Btn}"
+                                                Background="{StaticResource Accent}" Padding="14,6" Click="RecentSync_Click"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="5" Style="{StaticResource Card}" Margin="0,0,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Tracks" Style="{StaticResource CardTitle}"/>
+                        <ScrollViewer Grid.Row="1" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="TrackList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" Foreground="#E6E6E6" FontSize="13"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Status}" Foreground="{Binding StatusBrush}"
+                                                       FontSize="12" Margin="14,0,0,0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- OPTIONS PAGE -->
+            <ScrollViewer x:Name="PageOptions" Tag="Options" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="30,22,30,12">
+                    <StackPanel Margin="4,0,0,18">
+                        <TextBlock Text="Options" FontSize="30" FontWeight="SemiBold" Foreground="{StaticResource TextMain}"/>
+                        <TextBlock Text="Quality and download behaviour. Flip anything off to leave it alone."
+                                   Foreground="{StaticResource TextDim}" FontSize="13" Margin="0,4,0,0"/>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="MP3 bitrate" Style="{StaticResource CardTitle}"/>
+                                <TextBlock Text="Higher = bigger files. 320 is the max for MP3." Style="{StaticResource CardDesc}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <RadioButton x:Name="Br128" Content="128" GroupName="Br" Style="{StaticResource Pill}"/>
+                                <RadioButton x:Name="Br192" Content="192" GroupName="Br" Style="{StaticResource Pill}"/>
+                                <RadioButton x:Name="Br256" Content="256" GroupName="Br" Style="{StaticResource Pill}"/>
+                                <RadioButton x:Name="Br320" Content="320" GroupName="Br" Style="{StaticResource Pill}" IsChecked="True"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Parallel downloads" Style="{StaticResource CardTitle}"/>
+                                <TextBlock Text="How many songs download at the same time." Style="{StaticResource CardDesc}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <RadioButton x:Name="Par1" Content="1" GroupName="Par" Style="{StaticResource Pill}"/>
+                                <RadioButton x:Name="Par2" Content="2" GroupName="Par" Style="{StaticResource Pill}" IsChecked="True"/>
+                                <RadioButton x:Name="Par3" Content="3" GroupName="Par" Style="{StaticResource Pill}"/>
+                                <RadioButton x:Name="Par4" Content="4" GroupName="Par" Style="{StaticResource Pill}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Embed cover art" Style="{StaticResource CardTitle}"/>
+                                <TextBlock Text="Adds the thumbnail as album art inside each MP3." Style="{StaticResource CardDesc}"/>
+                            </StackPanel>
+                            <ToggleButton x:Name="ToggleCover" Style="{StaticResource Toggle}" IsChecked="True"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Skip tracks already downloaded" Style="{StaticResource CardTitle}"/>
+                                <TextBlock Text="Lets you re-run a playlist to pick up new songs only." Style="{StaticResource CardDesc}"/>
+                            </StackPanel>
+                            <ToggleButton x:Name="ToggleSkip" Style="{StaticResource Toggle}" IsChecked="True"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Update yt-dlp" Style="{StaticResource CardTitle}"/>
+                                <TextBlock Text="If downloads suddenly start failing, updating the downloader usually fixes it." Style="{StaticResource CardDesc}"/>
+                            </StackPanel>
+                            <Button x:Name="UpdateBtn" Grid.Column="1" Content="Update" Style="{StaticResource Btn}" Click="Update_Click"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- LOG PAGE -->
+            <Grid x:Name="PageLog" Tag="Log" Visibility="Collapsed" Margin="30,22,30,12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="4,0,0,18">
+                    <TextBlock Text="Log" FontSize="30" FontWeight="SemiBold" Foreground="{StaticResource TextMain}"/>
+                    <TextBlock Text="Everything the downloader is doing, useful if a track fails."
+                               Foreground="{StaticResource TextDim}" FontSize="13" Margin="0,4,0,0"/>
+                </StackPanel>
+                <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0">
+                    <TextBox x:Name="LogBox" IsReadOnly="True" Background="Transparent" BorderThickness="0"
+                             Foreground="#CFCFCF" FontFamily="Consolas" FontSize="12" TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"/>
+                </Border>
+            </Grid>
+
+            <!-- BOTTOM BAR -->
+            <Border Grid.Row="1" Background="#000000" Padding="30,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,24,0">
+                        <TextBlock x:Name="StatusText" Text="Ready" Foreground="#BDBDBD" FontSize="12" Margin="0,0,0,6"/>
+                        <ProgressBar x:Name="Prog" Minimum="0" Maximum="1" Value="0"/>
+                    </StackPanel>
+                    <Button x:Name="RetryBtn" Grid.Column="1" Content="Retry failed" Style="{StaticResource Btn}"
+                            Margin="0,0,10,0" IsEnabled="False" Click="Retry_Click"/>
+                    <Button x:Name="CancelBtn" Grid.Column="2" Content="Cancel" Style="{StaticResource Btn}"
+                            Margin="0,0,10,0" IsEnabled="False" Click="Cancel_Click"/>
+                    <Button x:Name="CloneBtn" Grid.Column="3" Content="Clone playlist" Style="{StaticResource AccentBtn}"
+                            Click="Clone_Click"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
